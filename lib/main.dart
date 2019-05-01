@@ -68,7 +68,11 @@ class _MyHomePageState extends State<MyHomePage> {
             RaisedButton(
               child: Text('Test Drive'),
               onPressed: () => _getTestDrive(),
-            )
+            ),
+            RaisedButton(
+              child: Text('Notification'),
+              onPressed: () => _showNotification(),
+            ),
           ],
         ),
       ),
@@ -88,5 +92,13 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _testDrive = testDrive;
     });
+  }
+
+  Future<void> _showNotification() async {
+    try {
+      await platform.invokeMethod("notification");
+    } on PlatformException catch (e) {
+      debugPrint('Failed to show notification: ${e.message}');
+    }
   }
 }
