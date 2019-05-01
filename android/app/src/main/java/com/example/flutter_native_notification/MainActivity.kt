@@ -14,12 +14,14 @@ import io.flutter.plugins.GeneratedPluginRegistrant
 
 class MainActivity : FlutterActivity() {
     private val CHANNEL = "fnn.ramadani.id/test_drive"
+    private lateinit var methodChannel: MethodChannel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         GeneratedPluginRegistrant.registerWith(this)
 
-        MethodChannel(flutterView, CHANNEL).setMethodCallHandler { call, result ->
+        methodChannel = MethodChannel(flutterView, CHANNEL)
+        methodChannel.setMethodCallHandler { call, result ->
             if (call.method == "getTestDrive") {
                 result.success("Ready to Test Drive")
             } else if (call.method == "notification") {
@@ -49,6 +51,8 @@ class MainActivity : FlutterActivity() {
             val notificationManager = (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
             notificationManager.createNotificationChannel(channel)
             notificationManager.notify(5, notificationBuilder.build())
+
+            methodChannel.invokeMethod("setTestDrive", "Hello From Notification!")
         } else {
             Log.d("MainActivity", "not yet implement")
         }

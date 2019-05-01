@@ -49,6 +49,13 @@ class _MyHomePageState extends State<MyHomePage> {
   String _testDrive = 'Unknown data';
 
   @override
+  void initState() {
+    super.initState();
+
+    platform.setMethodCallHandler((call) => _responseFromPlatform(call));
+  }
+
+  @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
@@ -99,6 +106,16 @@ class _MyHomePageState extends State<MyHomePage> {
       await platform.invokeMethod("notification");
     } on PlatformException catch (e) {
       debugPrint('Failed to show notification: ${e.message}');
+    }
+  }
+
+  _responseFromPlatform(MethodCall call) {
+    if (call.method == "setTestDrive") {
+      final String testDrive = call.arguments;
+
+      setState(() {
+        _testDrive = testDrive;
+      });
     }
   }
 }
