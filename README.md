@@ -1,2 +1,3 @@
-# flutter_notification_native_integration
+# flutter_native_notification
+
 Trying to integrate flutter with native notification
