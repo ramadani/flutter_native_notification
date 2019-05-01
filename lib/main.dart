@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() => runApp(MyApp());
 
@@ -44,6 +45,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  static const platform = const MethodChannel('fnn.ramadani.id/test_drive');
+  String _testDrive = 'Unknown data';
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -57,8 +61,32 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Text('Hello World'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(_testDrive),
+            RaisedButton(
+              child: Text('Test Drive'),
+              onPressed: () => _getTestDrive(),
+            )
+          ],
+        ),
       ),
     );
+  }
+
+  Future<void> _getTestDrive() async {
+    String testDrive;
+
+    try {
+      final String result = await platform.invokeMethod('getTestDrive');
+      testDrive = 'Test Drive value: $result';
+    } on PlatformException catch (e) {
+      testDrive = 'Failed to get test drive value: ${e.message}';
+    }
+
+    setState(() {
+      _testDrive = testDrive;
+    });
   }
 }
